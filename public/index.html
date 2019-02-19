@@ -13,19 +13,35 @@
             
         <div ng-controller="ControladorSuperior">                
             <br /><br />
+            <div>
+                <span>id alumno</span>
+                <input ng-model="idAlumno" type="text" />
+                <input type="button" ng-click="consultaXid()" value="consultar" />
+                <select class="right" ng-model="cantidadRegistros">
+                    <option value="1" selected="select">UNO</option>
+                    <option value="3">TRES</option>
+                    <option value="100">TODOS</option>
+                </select>
+            </div>
             <table class="table thead-dark table-bordered">
                 <thead>
-                    <tr class="background-color:black">
-                        <td ng-click="setOrden('id')">nro registro</td>
-                        <td ng-click="setOrden('nombre')">Nombre</td>
-                        <td ng-click="setOrden('apellido')">Apellido</td>
+                    <tr class="background-color:black">                            
+                        <td ng-click="ordenar('id')" ng-dblclick="ordenar('-id')">nro registro</td>
+                        <td ng-click="ordenar('nombre')" ng-dblclick="ordenar('-nombre')">Nombre</td>
+                        <td ng-click="ordenar('apellido')" ng-dblclick="ordenar('-apellido')">Apellido</td>
+                        <td>saludo</td>
+                        <td>Accion</td>
                     </tr>
-                </thead>
+                </thead>                
                 <tbody>
-                    <tr ng-repeat="z in alumnos ">
+                    <tr ng-repeat="z in alumnos"
+                        ng-class-even="'filapar'"
+                        ng-class-odd="'filaimpar'">
                         <td>#{{z.id }}</td>
                         <td>{{z.nombre }}</td>
                         <td>{{z.apellido }}</td>
+                        <td>{{z.saludo }}</td>
+                        <td><input type="button" value="borrar" ng-click="borrarAlumno(z)"></td>
                     </tr>
                 </tbody>
             </table>            

@@ -1,42 +1,75 @@
 (function() {
     var cursoAngular = angular.module('CursoAngular', []);
     
-    cursoAngular.controller('ControladorSuperior', function($scope) {
+    cursoAngular.controller('ControladorSuperior', function($http, $scope) {
 
-        $scope.alumnos = [{
-            id : 1000,
-            nombre: 'Daniel',
-            apellido: 'Bermudez'
-        }, {
-            id : 2000,
-            nombre: 'Fernando', 
-            apellido: 'Belizan'
-        }, {
-            id : 3000,
-            nombre: 'Gabriela',  
-            apellido: 'Pesich'
-        },
-        {
-            id : 4000,
-            nombre: 'Julieta',
-            apellido: 'Francisconi'
-        },{
-            id : 5000,
-            nombre: 'Lorena',
-            apellido: 'Bellon'
-        },{
-            id : 6000,  
-            nombre: 'Judith',
-            apellido: 'Cengarle'
-        }, {
-            id : 7000,       
-            nombre: 'Mariano',
-            apellido: 'Sayagués'
-        }, {
-            id : 8000,
-            nombre: 'Sebastian',
-            apellido: 'Maidana'
-        }];
+        $scope.top = 10;
+        $scope.variableOrden = 'id';
+
+        $scope.ordenar = function(col) {            
+            $scope.variableOrden = col;
+        }
+
+        $scope.alumnos = [];
+
+        $scope.consultaXid = function() {            
+            $http.get('/alumnos/' + $scope.idAlumno)
+            .then(
+            function(resultado) {
+                $scope.alumnos = resultado.data;
+                if (resultado.data.length === 0) {
+                    alert('resultado vacio');
+                }
+            }, 
+            function() {
+
+            });
+        }
+        
+        $scope.borrarAlumno = function(objAlumno) {            
+            let idx = $scope.alumnos.indexOf(objAlumno);
+            $scope.alumnos.splice(idx, 1);
+        }
     });
+
+    cursoAngular.filter('escribirBien', function() {
+        return function(z) {
+            let arrZ = z.split('');
+            let prim = arrZ[0].toUpperCase();
+            arrZ[0] = prim;        
+            return arrZ.join('');
+        }
+    });
+
+    cursoAngular.filter('lengujeInclusivo', function() {
+        return function(z) {
+            return z.replace('todos','todxs');
+        }
+    });
+
+    cursoAngular.filter('tamanio', function() {
+        return function(z) {
+            return z.length;
+        }
+    });
+
+    cursoAngular.filter('ordenamientoInicial', function() {
+        return function(arrInput) {
+            let arrOutput = arrInput.sort(function(a, b) {
+                if (a.apellido < b.apellido) {
+                    return -1;
+                }
+                if (a.apellido === b.apellido) {
+                    if (a.nombre < b.nombre) {
+                        return -1;
+                    }
+                }
+                return 1;
+            });
+            console.log(arrOutput);
+            return arrOutput;
+        }
+    });
+
 
 })();
